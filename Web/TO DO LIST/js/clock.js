@@ -4,8 +4,8 @@ function showCurrentTime() {
   const date = new Date();
   const hour =
     date.getHours() > 12
-      ? `PM ${date.getHours() - 12}`
-      : `AM ${date.getHours()}`;
+      ? `오후 ${date.getHours() - 12}`
+      : `오전 ${date.getHours()}`;
   const min = date.getMinutes();
   const sec = date.getSeconds();
 
