@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banner</title>
+    <style>
+      #view {
+        position: relative;
+        width: 600px;
+        height: 400px;
+        overflow: hidden;
+      }
+
+      #imgs {
+        position: absolute;
+        width: 4800px;
+        height: 100%;
+        transition: 0.5s;
+      }
+
+      img {
+        width: 600px;
+        height: 400px;
+      }
+
+      #remote-view {
+        width: 600px;
+        height: 40px;
+        position: absolute;
+        bottom: 0;
+      }
+
+      #remote-list {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #remote-list li {
+        width: 20px;
+        height: 20px;
+        margin: 4px;
+        font-size: 1rem;
+        font-weight: bold;
+        border: 2px solid green;
+        border-radius: 50%;
+        line-height: 18px;
+        text-align: center;
+        background: white;
+        cursor: pointer;
+      }
+
+      #remote-list li:hover {
+        background: green;
+        color: white;
+        transform: scale(1.3);
+        transition: 0.1s;
+      }
+
+      #remote-list li::selection {
+        user-select: none;
+      }
+    </style>
+    <script>
+      let dist = 0; //이미지 좌표
+      let currentImgIndex = 1; //현재 이미지의 index
+      const leftEndDist = 0; //첫번째 이미지 좌표
+      const rightEndDist = -4200; //마지막 이미지 좌표
+      let autoChange = false; //이미지 자동변경 버튼 활성화여부
+      let timer;
+
+      function changeCss(index) {
+        //현재 이미지의 버튼 디자인을 변경함
+        for (let i = 1; i <= 8; i++) {
+          document.getElementById("btn" + i).style.backgroundColor = "white";
+          document.getElementById("btn" + i).style.color = "black";
+        }
+        document.getElementById("btn" + index).style.backgroundColor = "green";
+        document.getElementById("btn" + index).style.color = "white";
+      }
+
+      function setDist(d) {
+        //이미지 좌표를 설정함
+        currentImgIndex = (d * -1) / 600 + 1;
+        document.getElementById("imgs").style.left = d + "px";
+        changeCss(currentImgIndex);
+      }
+
+      function move(num) {
+        //버튼 클릭시 해당 이미지 좌표로 이동
+        dist = (num - 1) * 600 * -1;
+        setDist(dist);
+      }
+
+      function moveLeft() {
+        //한칸 왼쪽의 이미지로 이동
+        if (dist == leftEndDist) {
+          //첫번째 이밎일 경우 마지막 이미지로 이동
+          dist = rightEndDist;
+          setDist(dist);
+          return;
+        }
+        dist += 600;
+        setDist(dist);
+      }
+
+      function moveRight() {
+        //한칸 오른쪽의 이미지로 이동
+        if (dist == rightEndDist) {
+          //마지막 이미지일 경우 첫번째 이미지로 이동
+          dist = leftEndDist;
+          setDist(dist);
+          return;
+        }
+        dist -= 600;
+        setDist(dist);
+      }
+
+      function moveAuto() {
+        //이미지를 자동으로 한칸씩 우측으로 이동시킴
+        if (autoChange == false) {
+          autoChange = true;
+          document.getElementById("btn-auto").innerText = "■";
+          timer = window.setInterval(function () {
+            moveRight();
+          }, 1000);
+        } else {
+          autoChange = false;
+          document.getElementById("btn-auto").innerText = "▶";
+          window.clearInterval(timer);
+        }
+      }
+    </script>
+  </head>
+  <body onload="move(1)">
+    <div id="view">
+      <div id="imgs">
+        <img src="images/Koala.jpg" /><img src="images/Chrysanthemum.jpg" /><img
+          src="images/Desert.jpg"
+        /><img src="images/Hydrangeas.jpg" /><img
+          src="images/Jellyfish.jpg"
+        /><img src="images/Lighthouse.jpg" /><img src="images/Tulips.jpg" /><img
+          src="images/Penguins.jpg"
+        />
+      </div>
+      <div id="remote-view">
+        <ul id="remote-list">
+          <li id="btn1" onclick="move(1)">1</li>
+          <li id="btn2" onclick="move(2)">2</li>
+          <li id="btn3" onclick="move(3)">3</li>
+          <li id="btn4" onclick="move(4)">4</li>
+          <li id="btn5" onclick="move(5)">5</li>
+          <li id="btn6" onclick="move(6)">6</li>
+          <li id="btn7" onclick="move(7)">7</li>
+          <li id="btn8" onclick="move(8)">8</li>
+          <li onclick="moveLeft()">◁</li>
+          <li onclick="moveRight()">▷</li>
+          <li id="btn-auto" onclick="moveAuto()">▶</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
